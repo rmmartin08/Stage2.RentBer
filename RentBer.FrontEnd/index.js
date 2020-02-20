@@ -15,6 +15,9 @@ $(
                 }
 
             })
+            .fail(function() {
+                alert("Failed to get owners. Is the backend running?")
+            })
 
         $.ajax(`${baseHostApi}/renters`)
             .done(function (renters) {
@@ -28,6 +31,9 @@ $(
                     rentersSelectElem.append(renterOption);
                 }
 
+            })
+            .fail(function() {
+                alert("Failed to get renters. Is the backend running?")
             });
 
         $("#add-new-owner-slide-line").click(function() {

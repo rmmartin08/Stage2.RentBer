@@ -15,7 +15,7 @@ namespace RentBer.Controllers
         public IHttpActionResult Get(Guid? rentalAgreementId = null, Guid? ownerId = null, DateTime? dueAfterDate = null)
         {
             var rentalPaymentDao = new RentalPaymentDao();
-            if (rentalAgreementId.HasValue)
+            if (rentalAgreementId.HasValue || ownerId.HasValue || dueAfterDate.HasValue)
             {
                 return Ok(rentalPaymentDao.GetFilteredRentalPayments(rentalAgreementId, ownerId, dueAfterDate));
             }

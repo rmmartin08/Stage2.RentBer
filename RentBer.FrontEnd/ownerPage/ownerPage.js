@@ -38,11 +38,13 @@ function renderPropertiesList(properties) {
 
 function renderRentalAgreementsList(rentalAgreements) {
     let newRentalAgreementDiv = $("<div>");
-    let newRentalAgreementLink = $("<a>");
-    newRentalAgreementDiv.append(newRentalAgreementLink);
 
     $("#current-rentals-div").append(newRentalAgreementDiv);
     for (const rentalAgreement of rentalAgreements) {
+        let newRentalAgreementLink = $("<a>");
+        newRentalAgreementLink.addClass("d-block");
+        newRentalAgreementDiv.append(newRentalAgreementLink);
+
         $.ajax(`${baseHostApi}/renters/${rentalAgreement.RenterId}`)
             .done(function (renter) {
                 newRentalAgreementLink.attr("href", "/renterPage/renterPage.html?renterId=" + renter.Id)

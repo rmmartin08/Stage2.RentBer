@@ -29,5 +29,12 @@ namespace RentBer.Data_Access
                 }
             }
         }
+
+        public static bool DisposeOfDb()
+        {
+            db.Dispose();
+            db = null;
+            return true;
+        }
     }
 }

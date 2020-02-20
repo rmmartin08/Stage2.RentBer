@@ -32,7 +32,7 @@ namespace RentBer.Data_Access
             {
                 var rentalAgreementDao = new RentalAgreementDao();
                 var rentalAgreements = rentalAgreementDao.GetRentalAgreementsByOwner(ownerId.Value)
-                    .Select(ra => ra.OwnerId);
+                    .Select(ra => ra.Id);
 
                 machingRentalPayments =
                     machingRentalPayments.Where(rp => rentalAgreements.Contains(rp.RentalAgreementId));
@@ -65,8 +65,7 @@ namespace RentBer.Data_Access
                 Id = Guid.NewGuid(),
                 RentalAgreementId = editableRentalPayment.RentalAgreementId.Value,
                 DueDate = editableRentalPayment.DueDate ?? DateTime.MinValue,
-                IsPaid = editableRentalPayment.IsPaid ?? false,
-                PaidDate = editableRentalPayment.PaidDate ?? DateTime.MinValue
+                IsPaid = editableRentalPayment.IsPaid ?? false
             };
 
             rentalPaymentCol.Insert(newRentalPayment);
@@ -95,11 +94,6 @@ namespace RentBer.Data_Access
             if (editableRentalPayment.IsPaid.HasValue)
             {
                 foundRentalPayment.IsPaid = editableRentalPayment.IsPaid.Value;
-            }
-
-            if (editableRentalPayment.PaidDate.HasValue)
-            {
-                foundRentalPayment.PaidDate = editableRentalPayment.PaidDate.Value;
             }
 
             rentalPaymentCol.Update(foundRentalPayment);
