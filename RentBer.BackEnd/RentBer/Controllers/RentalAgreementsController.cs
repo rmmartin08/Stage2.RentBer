@@ -9,25 +9,23 @@ using RentBer.Models;
 
 namespace RentBer.Controllers
 {
+    //[RoutePrefix("api/RentalAgreements")]
     public class RentalAgreementsController : ApiController
     {
+        [HttpGet]
         // GET: api/RentalAgreements
-        public IHttpActionResult Get()
-        {
-            var rentalAgreementDao = new RentalAgreementDao();
-            return Ok(rentalAgreementDao.GetAllRentalAgreements());
-        }
-
-        public IHttpActionResult GetFilteredList(Guid? ownerId, Guid? renterId)
+        public IHttpActionResult Get(Guid? ownerId = null, Guid? renterId = null)
         {
             var rentalAgreementDao = new RentalAgreementDao();
 
             if (!ownerId.HasValue && !renterId.HasValue)
             {
-                return BadRequest("At least owner id or rental id must be provided in filter.");
+                return Ok(rentalAgreementDao.GetAllRentalAgreements());
             }
-
-            return Ok(rentalAgreementDao.GetRentalAgreementsByFilter(ownerId, renterId));
+            else
+            {
+                return Ok(rentalAgreementDao.GetRentalAgreementsByFilter(ownerId, renterId));
+            }
         }
 
         // GET: api/RentalAgreements/5
@@ -68,7 +66,7 @@ namespace RentBer.Controllers
         }
 
         // DELETE: api/RentalAgreements/5
-        public IHttpActionResult Delete(int id)
+        public IHttpActionResult Delete(Guid id)
         {
             var rentalAgreementDao = new RentalAgreementDao();
             var didDelete = rentalAgreementDao.DeleteRentalAgreement(id);

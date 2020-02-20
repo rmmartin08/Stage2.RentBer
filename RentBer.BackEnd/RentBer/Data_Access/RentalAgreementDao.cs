@@ -37,7 +37,7 @@ namespace RentBer.Data_Access
         public RentalAgreement AddNewRentalAgreement(EditableRentalAgreement editableRentalAgreement)
         {
             if (!editableRentalAgreement.OwnerId.HasValue || !editableRentalAgreement.RenterId.HasValue ||
-                !editableRentalAgreement.MonthlyRate.HasValue)
+                !editableRentalAgreement.MonthlyRate.HasValue || !editableRentalAgreement.PropertyId.HasValue)
             {
                 throw new ValidationException("Rental Agreement requires a Renter Id, Owner Id, and a Monthly Rate");
             }
@@ -48,6 +48,7 @@ namespace RentBer.Data_Access
                 Id = Guid.NewGuid(),
                 OwnerId = editableRentalAgreement.OwnerId.Value,
                 RenterId = editableRentalAgreement.RenterId.Value,
+                PropertyId = editableRentalAgreement.PropertyId.Value,
                 MonthlyRate = editableRentalAgreement.MonthlyRate.Value
             };
 
@@ -71,6 +72,11 @@ namespace RentBer.Data_Access
                 foundRentalAgreement.MonthlyRate = editableRentalAgreement.MonthlyRate.Value;
             }
 
+            if (editableRentalAgreement.PropertyId.HasValue)
+            {
+                foundRentalAgreement.PropertyId = editableRentalAgreement.PropertyId.Value;
+            }
+
             rentalAgreementCol.Update(foundRentalAgreement);
 
             return foundRentalAgreement;
@@ -85,9 +91,18 @@ namespace RentBer.Data_Access
         public RentalAgreement[] GetRentalAgreementsByFilter(Guid? ownerId, Guid? renterId)
         {
             var rentalAgreementCol = db.GetCollection<RentalAgreement>("RentalAgreements");
-            return rentalAgreementCol.Find(ra => 
-                (ownerId.HasValue && ownerId.Value == ra.OwnerId) ||
-                 (renterId.HasValue && renterId.Value == ra.RenterId)).ToArray();
+            var returnAgreements = rentalAgreementCol.FindAll();
+            if (ownerId.HasValue)
+            {
+                returnAgreements = returnAgreements.Where(ra => ra.OwnerId == ownerId);
+            }
+
+            if (renterId.HasValue)
+            {
+                returnAgreements = returnAgreements.Where(ra => ra.RenterId == renterId);
+            }
+
+            return returnAgreements.ToArray();
         }
     }
 }

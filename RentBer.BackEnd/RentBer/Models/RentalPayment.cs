@@ -7,6 +7,7 @@ namespace RentBer.Models
 {
     public class RentalPayment
     {
+        public Guid Id { get; set; }
         public Guid RentalAgreementId { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime? PaidDate { get; set; }

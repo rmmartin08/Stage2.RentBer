@@ -12,10 +12,18 @@ namespace RentBer.Controllers
     public class PropertiesController : ApiController
     {
         // GET: api/Owners
-        public IHttpActionResult Get()
+        [HttpGet]
+        public IHttpActionResult Get(Guid? ownerId = null)
         {
             var propertyDao = new PropertyDao();
-            return Ok(propertyDao.GetAllProperties());
+            if (ownerId.HasValue)
+            {
+                return Ok(propertyDao.GetPropertiesForOwner(ownerId.Value));
+            }
+            else
+            {
+                return Ok(propertyDao.GetAllProperties());
+            }
         }
 
         // GET: api/Owners/5

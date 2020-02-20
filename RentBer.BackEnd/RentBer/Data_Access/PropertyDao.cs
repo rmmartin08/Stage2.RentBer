@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using RentBer.Models;
 
 namespace RentBer.Data_Access
 {
-    public class PropertyDao: DaoBase
+    public class PropertyDao : DaoBase
     {
         public Property[] GetAllProperties()
         {
@@ -22,10 +23,15 @@ namespace RentBer.Data_Access
 
         public Property AddNewProperty(EditableProperty editableProperty)
         {
+            if (!editableProperty.OwnerId.HasValue)
+            {
+                throw new ValidationException("OwnerId is required to add a property.");
+            }
             var propertyCol = db.GetCollection<Property>("Properties");
             var newProperty = new Property()
             {
                 Id = Guid.NewGuid(),
+                OwnerId = editableProperty.OwnerId.Value,
                 StreetAddress = editableProperty.StreetAddress,
                 City = editableProperty.City,
                 State = editableProperty.State,
@@ -34,6 +40,12 @@ namespace RentBer.Data_Access
 
             propertyCol.Insert(newProperty);
             return newProperty;
+        }
+
+        public Property[] GetPropertiesForOwner(Guid ownerId)
+        {
+            var propertyCol = db.GetCollection<Property>("Properties");
+            return propertyCol.Find(p => p.OwnerId == ownerId).ToArray();
         }
 
         public Property UpdateProperty(Guid propertyId, EditableProperty editableProperty)
@@ -50,14 +62,17 @@ namespace RentBer.Data_Access
             {
                 foundProperty.StreetAddress = editableProperty.StreetAddress;
             }
+
             if (!string.IsNullOrEmpty(editableProperty.City))
             {
                 foundProperty.City = editableProperty.City;
             }
+
             if (!string.IsNullOrEmpty(editableProperty.State))
             {
                 foundProperty.State = editableProperty.State;
             }
+
             if (editableProperty.Zip.HasValue)
             {
                 foundProperty.Zip = editableProperty.Zip.Value;
