@@ -14,7 +14,7 @@ We have some initial work done on the front and the back end, but we need your h
  
 ## RentBer Requirements:
 
-1. Renter's should be able to see their payment history **_Top Priority!__ Do this first!**
+1. Renter's should be able to see their payment history **_Top Priority!_ Do this first!**
     - This should happen on the renterPage
     - The list of unpaid payments should be in the Due Rental Payments
         - Unpaid payments have a property called IsPaid
