@@ -76,7 +76,33 @@ function renderUpcomingPaymentsList(payments) {
                 $.ajax(`${baseHostApi}/properties/${rentalAgreement.PropertyId}`)
                     .done(function (property) {
                         paymentDetails.append(` from ${property.StreetAddress}`);
-                    })
+                        if (payment.IsPaid == false) {
+                            paymentDetails.append(` <button id ="pay-${payment.Id}-button">Mark as Paid</button>`);
+                            paidButtonFunctionality(payment.Id);
+                        }
+                    })                
             });
+
     }
+}
+
+function paidButtonFunctionality(paymentId) {
+    $(`#pay-${paymentId}-button`).click(function() {
+        var date = new Date();
+        goodDate = date.toISOString();
+            payment = {
+            PaidDate: goodDate,
+            IsPaid: true
+        }
+        $.ajax({
+           url: `${baseHostApi}/RentalPayments/${paymentId}`,
+           method: "Put",
+           data: payment
+       }).done(function() {
+           alert("Paid");
+        })        
+       .fail(function (xhr, status, err) {
+           alert("Ajax Failed. Is the backend running? Err:" + status)
+       });    
+    })
 }
